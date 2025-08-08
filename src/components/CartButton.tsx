@@ -20,7 +20,7 @@ export function CartButton({ userId }: CartButtonProps) {
           const response = await fetch('/api/cart')
           if (response.ok) {
             const data = await response.json()
-            const count = data.reduce((total: number, item: { quantity: number }) => total + item.quantity, 0)
+            const count = data.reduce((total: number, item: { quantity: number }) => total + (item.quantity || 0), 0)
             setCartItemCount(count)
           }
         } catch (error) {
@@ -31,7 +31,7 @@ export function CartButton({ userId }: CartButtonProps) {
         const savedCart = localStorage.getItem('cartzy-cart')
         if (savedCart) {
           const cartItems = JSON.parse(savedCart)
-          const count = cartItems.reduce((total: number, item: { quantity: number }) => total + item.quantity, 0)
+          const count = cartItems.reduce((total: number, item: { quantity: number }) => total + (item.quantity || 0), 0)
           setCartItemCount(count)
         }
       }
