@@ -40,4 +40,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       console.log(`User signed in: ${user.email} (New user: ${isNewUser})`)
     },
   },
+  trustHost: true,
+  useSecureCookies: process.env.NODE_ENV === "production",
 })
