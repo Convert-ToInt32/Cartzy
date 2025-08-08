@@ -11,4 +11,7 @@ npx prisma migrate deploy
 
 # Start the application
 echo "Starting the application..."
-node .next/standalone/server.js 
+export PORT=${PORT:-8080}
+export HOST=0.0.0.0
+echo "Listening on $HOST:$PORT"
+node .next/standalone/server.js
