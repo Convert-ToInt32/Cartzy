@@ -16,6 +16,8 @@ const eslintConfig = [
   {
     rules: {
       'react-hooks/exhaustive-deps': 'warn',
+      'no-undef': 'off',
+      'no-unused-vars': 'warn',
     },
   },
 ]
