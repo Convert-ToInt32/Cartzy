@@ -7,7 +7,7 @@ import { Notification } from "@/components/Notification";
 import { SearchBar } from "@/components/SearchBar";
 import { FeaturedCarousel } from "@/components/FeaturedCarousel";
 import Image from "next/image";
-import { LoadingSpinner, ProductCardSkeleton, CategorySkeleton } from "@/components/LoadingSpinner";
+import { ProductCardSkeleton, CategorySkeleton } from "@/components/LoadingSpinner";
 import { useEffect, useState } from "react";
 
 interface Product {

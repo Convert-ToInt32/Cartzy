@@ -1,4 +1,5 @@
 "use client"
+import React from "react"
 
 import { useState } from "react"
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline"
