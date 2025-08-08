@@ -21,33 +21,32 @@ interface ShoppingCartProps {
 
 export function ShoppingCart({ isOpen, onClose, userId }: ShoppingCartProps) {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
-  const [isLoading, setIsLoading] = useState(false)
 
   // Load cart items on mount
   useEffect(() => {
-    loadCartItems()
-  }, [userId])
-
-  const loadCartItems = async () => {
-    if (userId) {
-      // Load from database for logged-in users
-      try {
-        const response = await fetch('/api/cart')
-        if (response.ok) {
-          const data = await response.json()
-          setCartItems(data)
+    const loadCartItems = async () => {
+      if (userId) {
+        // Load from database for logged-in users
+        try {
+          const response = await fetch('/api/cart')
+          if (response.ok) {
+            const data = await response.json()
+            setCartItems(data)
+          }
+        } catch (error) {
+          console.error('Error loading cart:', error)
         }
-      } catch (error) {
-        console.error('Error loading cart:', error)
-      }
-    } else {
-      // Load from localStorage for non-logged-in users
-      const savedCart = localStorage.getItem('cartzy-cart')
-      if (savedCart) {
-        setCartItems(JSON.parse(savedCart))
+      } else {
+        // Load from localStorage for non-logged-in users
+        const savedCart = localStorage.getItem('cartzy-cart')
+        if (savedCart) {
+          setCartItems(JSON.parse(savedCart))
+        }
       }
     }
-  }
+    
+    loadCartItems()
+  }, [userId])
 
   const saveCartItems = async (items: CartItem[]) => {
     if (userId) {
@@ -67,30 +66,7 @@ export function ShoppingCart({ isOpen, onClose, userId }: ShoppingCartProps) {
     }
   }
 
-  const addToCart = async (product: any) => {
-    const existingItem = cartItems.find(item => item.productId === product.id)
-    
-    let newItems: CartItem[]
-    if (existingItem) {
-      newItems = cartItems.map(item =>
-        item.productId === product.id
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      )
-    } else {
-      newItems = [...cartItems, {
-        id: Date.now().toString(),
-        productId: product.id,
-        name: product.name,
-        price: product.price,
-        quantity: 1,
-        image: product.images[0]
-      }]
-    }
-    
-    setCartItems(newItems)
-    await saveCartItems(newItems)
-  }
+
 
   const updateQuantity = async (itemId: string, newQuantity: number) => {
     if (newQuantity <= 0) {

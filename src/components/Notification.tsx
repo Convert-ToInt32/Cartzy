@@ -22,32 +22,32 @@ export function Notification({ userId }: NotificationProps) {
   const [unreadCount, setUnreadCount] = useState(0)
 
   useEffect(() => {
-    loadNotifications()
-  }, [userId])
-
-  const loadNotifications = async () => {
-    if (userId) {
-      // Load from database for logged-in users
-      try {
-        const response = await fetch('/api/notifications')
-        if (response.ok) {
-          const data = await response.json()
+    const loadNotifications = async () => {
+      if (userId) {
+        // Load from database for logged-in users
+        try {
+          const response = await fetch('/api/notifications')
+          if (response.ok) {
+            const data = await response.json()
+            setNotifications(data)
+            setUnreadCount(data.filter((n: Notification) => !n.read).length)
+          }
+        } catch (error) {
+          console.error('Error loading notifications:', error)
+        }
+      } else {
+        // Load from localStorage for non-logged-in users
+        const savedNotifications = localStorage.getItem('cartzy-notifications')
+        if (savedNotifications) {
+          const data = JSON.parse(savedNotifications)
           setNotifications(data)
           setUnreadCount(data.filter((n: Notification) => !n.read).length)
         }
-      } catch (error) {
-        console.error('Error loading notifications:', error)
-      }
-    } else {
-      // Load from localStorage for non-logged-in users
-      const savedNotifications = localStorage.getItem('cartzy-notifications')
-      if (savedNotifications) {
-        const data = JSON.parse(savedNotifications)
-        setNotifications(data)
-        setUnreadCount(data.filter((n: Notification) => !n.read).length)
       }
     }
-  }
+    
+    loadNotifications()
+  }, [userId])
 
   const markAsRead = async (notificationId: string) => {
     const updatedNotifications = notifications.map(n =>

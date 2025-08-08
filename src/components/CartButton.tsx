@@ -13,32 +13,32 @@ export function CartButton({ userId }: CartButtonProps) {
   const [cartItemCount, setCartItemCount] = useState(0)
 
   useEffect(() => {
-    loadCartItemCount()
-  }, [userId])
-
-  const loadCartItemCount = async () => {
-    if (userId) {
-      // Load from database for logged-in users
-      try {
-        const response = await fetch('/api/cart')
-        if (response.ok) {
-          const data = await response.json()
-          const count = data.reduce((total: number, item: any) => total + item.quantity, 0)
+    const loadCartItemCount = async () => {
+      if (userId) {
+        // Load from database for logged-in users
+        try {
+          const response = await fetch('/api/cart')
+          if (response.ok) {
+            const data = await response.json()
+            const count = data.reduce((total: number, item: { quantity: number }) => total + item.quantity, 0)
+            setCartItemCount(count)
+          }
+        } catch (error) {
+          console.error('Error loading cart count:', error)
+        }
+      } else {
+        // Load from localStorage for non-logged-in users
+        const savedCart = localStorage.getItem('cartzy-cart')
+        if (savedCart) {
+          const cartItems = JSON.parse(savedCart)
+          const count = cartItems.reduce((total: number, item: { quantity: number }) => total + item.quantity, 0)
           setCartItemCount(count)
         }
-      } catch (error) {
-        console.error('Error loading cart count:', error)
-      }
-    } else {
-      // Load from localStorage for non-logged-in users
-      const savedCart = localStorage.getItem('cartzy-cart')
-      if (savedCart) {
-        const cartItems = JSON.parse(savedCart)
-        const count = cartItems.reduce((total: number, item: any) => total + item.quantity, 0)
-        setCartItemCount(count)
       }
     }
-  }
+    
+    loadCartItemCount()
+  }, [userId])
 
   return (
     <>
